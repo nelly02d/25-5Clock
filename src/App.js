@@ -1,6 +1,7 @@
 import Length from "./components/LengthTime";
 import {FiPlay, FiPause} from 'react-icons/fi';
 import { useState, useRef } from "react";
+import alarm from './components/alarm.mp3';
 
 function App() {
   //Initial state minutes multiply seconds = 1500 seconds
@@ -14,6 +15,7 @@ function App() {
   //A state the switch to break time when session time is finished
   const [onBreak, setOnBreak] = useState(false);
 
+  const [onBreakAudio, setOnBreakAudio] = useState(new Audio(alarm));
   //Get interval current data
   const intervalRef = useRef();
 
@@ -51,16 +53,23 @@ function App() {
     if(prev <= 0 && !setBreak) {
       setBreak = true;
       setOnBreak(true);
-      
+      playBreakAudio();
+
       return breakTime;
     } else if(prev <=0 && setBreak) {
       setBreak = true;
-    setOnBreak(true);  
+      setOnBreak(true);
+      playBreakAudio();
 
     return sessionTime;
     }
     return prev -1
   });
+
+  const playBreakAudio = () => {
+    onBreakAudio.currentTime = 4;
+    onBreakAudio.play();
+  }
 
   //Funtion start button
   const handleStart = () => {
