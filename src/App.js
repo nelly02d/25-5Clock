@@ -21,6 +21,20 @@ function App() {
     );
   };
 
+    //funtion that adjust time
+    const adjustTime = (amount, type) => {
+      if(type === 'break') {
+        if(breakTime <= 60 && amount < 0) return;
+        setBreakTime((prev) => prev + amount);
+      } else {
+        if(sessionTime <= 60 && amount < 0) return;
+        setSessionTime((prev) => prev + amount);
+        if(null) {
+          setDisplayTime(sessionTime + amount);
+        }
+      };
+    };
+
   return (
     <div className="App">
       <h1>Pamodoro Clock</h1>
@@ -29,7 +43,7 @@ function App() {
       {/* Break Time */}
       <Length 
         title={'Break length'}
-        adjustTime={null}
+        adjustTime={adjustTime}
         type={'break'}
         time={breakTime}
         formatTime={formatTime}
@@ -37,7 +51,7 @@ function App() {
         {/* Session Time */}
       <Length 
         title={'Session length'}
-        adjustTime={null}
+        adjustTime={adjustTime}
         type={'session'}
         time={sessionTime}
         formatTime={formatTime}
