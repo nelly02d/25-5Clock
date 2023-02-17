@@ -1,5 +1,7 @@
 import Length from "./components/LengthTime";
 import {FiPlay, FiPause} from 'react-icons/fi';
+import {BsAlarm} from 'react-icons/bs';
+import {DiCodeigniter} from 'react-icons/di';
 import { useState, useRef } from "react";
 import alarm from './components/alarm.mp3';
 
@@ -15,6 +17,7 @@ function App() {
   //A state the switch to break time when session time is finished
   const [onBreak, setOnBreak] = useState(false);
 
+  //A state that setting audio to session and break time
   const [onBreakAudio, setOnBreakAudio] = useState(new Audio(alarm));
   //Get interval current data
   const intervalRef = useRef();
@@ -36,10 +39,10 @@ function App() {
   const adjustTime = (amount, type) => {
     if(type === 'break') {
       if(breakTime <= 60 && amount < 0) return;
-      setBreakTime((prev) => prev + amount);
+      setBreakTime((val) => val + amount);
     } else {
       if(sessionTime <= 60 && amount < 0) return;
-      setSessionTime((prev) => prev + amount);
+      setSessionTime((val) => val + amount);
       if(!start) {
         setDisplayTime(sessionTime + amount);
       };
@@ -47,25 +50,27 @@ function App() {
   };
 
   //funtion that handle switch between session time to break time
-  const decreaseTime = (title) => setDisplayTime((prev) => {
+  const decreaseTime = () => setDisplayTime((val) => {
     let setBreak = onBreak;
 
-    if(prev <= 0 && !setBreak) {
+    if(val <= 0 && !setBreak) {
       setBreak = true;
       setOnBreak(true);
       playBreakAudio();
 
       return breakTime;
-    } else if(prev <=0 && setBreak) {
-      setBreak = true;
-      setOnBreak(true);
+    } else if(val === 0) {
+      setBreak = false;
+      setOnBreak(false);
       playBreakAudio();
-
-    return sessionTime;
+      
+      return sessionTime;
     }
-    return prev -1
+
+    return val - 1
   });
 
+  //Funtion that play alaram when both session and breaktime is finished
   const playBreakAudio = () => {
     onBreakAudio.currentTime = 4;
     onBreakAudio.play();
@@ -95,6 +100,7 @@ function App() {
     <div className="App">
       <h1>Pamodoro Clock</h1>
       <div>
+        <h2>{onBreak ? (<div><BsAlarm/> Break Time</div>) : (<div><DiCodeigniter/> Session Time</div>)}</h2>
         <h1>{formatTime(displayTime)}</h1>
         {/* Control time */}
         <button type="button" onClick={handleStart}>{pause ? <FiPlay /> : <FiPause/>}</button>
