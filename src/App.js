@@ -8,12 +8,14 @@ function App() {
   //Initial break time session 300 seconds
   const [breakTime, setBreakTime] = useState( 5 * 60 );
   const [sessionTime, setSessionTime] = useState( 25 * 60 );  
-  //Control time
+  //A state that control time
   const [start, setStart] = useState(false);
   const [pause, setPause] = useState(true);
+  //A state the switch to break time when session time is finished
+  const [onBreak, setOnBreak] = useState(false);
+
   //Get interval current data
   const intervalRef = useRef();
-
 
   //A function that format time seconds to minutes, so we can have a value of 25 minutes
   const formatTime = (time) => {
@@ -38,20 +40,36 @@ function App() {
       setSessionTime((prev) => prev + amount);
       if(!start) {
         setDisplayTime(sessionTime + amount);
-      }
+      };
     };
   };
 
-  //Funtion start button
-  const decreaseTime = () => setDisplayTime((prev) => prev -1);
+  //funtion that handle switch between session time to break time
+  const decreaseTime = (title) => setDisplayTime((prev) => {
+    let setBreak = onBreak;
 
+    if(prev <= 0 && !setBreak) {
+      setBreak = true;
+      setOnBreak(true);
+      
+      return breakTime;
+    } else if(prev <=0 && setBreak) {
+      setBreak = true;
+    setOnBreak(true);  
+
+    return sessionTime;
+    }
+    return prev -1
+  });
+
+  //Funtion start button
   const handleStart = () => {
     if(start) {
       intervalRef.current = setInterval(decreaseTime, 1000);
       return () => clearInterval(intervalRef.current);
     } else {
       setStart(handlePause());
-    }
+    };
   };
 
   //handle pause button
@@ -60,7 +78,7 @@ function App() {
       clearInterval(intervalRef.current)
     } else {
       intervalRef.current = setInterval(decreaseTime, 1000);
-    }
+    };
     setPause(!pause);
   };
 
@@ -68,25 +86,25 @@ function App() {
     <div className="App">
       <h1>Pamodoro Clock</h1>
       <div>
-      <h1>{formatTime(displayTime)}</h1>
-      {/* Control time */}
-      <button type="button" onClick={handleStart}>{pause ? <FiPlay /> : <FiPause/>}</button>
-      {/* Break Time */}
-      <Length 
-        title={'Break length'}
-        adjustTime={adjustTime}
-        type={'break'}
-        time={breakTime}
-        formatTime={formatTime}
+        <h1>{formatTime(displayTime)}</h1>
+        {/* Control time */}
+        <button type="button" onClick={handleStart}>{pause ? <FiPlay /> : <FiPause/>}</button>
+        {/* Break Time */}
+        <Length 
+          title={'Break length'}
+          adjustTime={adjustTime}
+          type={'break'}
+          time={breakTime}
+          formatTime={formatTime}
+          />
+          {/* Session Time */}
+        <Length 
+          title={'Session length'}
+          adjustTime={adjustTime}
+          type={'session'}
+          time={sessionTime}
+          formatTime={formatTime}
         />
-        {/* Session Time */}
-      <Length 
-        title={'Session length'}
-        adjustTime={adjustTime}
-        type={'session'}
-        time={sessionTime}
-        formatTime={formatTime}
-      />
       </div> 
     </div>
   );
