@@ -1,0 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.App {
+  text-align: center;
+  height: 100vh;
+  background-color: #282c34;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  font-family: 'Orbitron', sans-serif;
+}
+
+.clock-container {
+  background: linear-gradient(180deg, #051617, #0e3839);
+  padding: 30px;
+  color: #06f1f6;
+  box-shadow: 0 0 5px 10px;
+}
+
+.clock-title {
+  margin-bottom: 50px;
+  color: #fff;
+  text-shadow: #FC0 1px 0 10px;
+}
+
+.clock {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.length {
+  padding: 0 40px;
+}
+
+.length-ctrl {
+  display: flex;
+  justify-content: space-evenly;
+  padding: 20px 0;
+
+}
+
+.clock-main {
+  border: 3px solid #06f1f6;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 20px 0;
+}
+
+.display-time {
+  padding: 10px 0;
+}
+
+.time-title {
+  text-shadow: #fff 1px 0 10px;
+}
+
+button {
+  cursor: pointer;
+  border-style: none;
+  background-color: transparent;
+  color: #06f1f6;
+  margin: 0 10px;
+}
+
+@media (max-width: 800px) {
+  .clock {
+    display: block;
+  }
+
+  .control-btn {
+    margin: 20px 0;
+  }
+}

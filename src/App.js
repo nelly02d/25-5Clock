@@ -1,9 +1,13 @@
 import Length from "./components/LengthTime";
+import './App.css' 
 import {FiPlay, FiPause} from 'react-icons/fi';
 import {BsAlarm} from 'react-icons/bs';
 import {DiCodeigniter} from 'react-icons/di';
+import {BiReset} from 'react-icons/bi';
 import { useState, useRef } from "react";
 import alarm from './components/alarm.mp3';
+import { IconContext } from "react-icons";
+
 
 function App() {
   //Initial state minutes multiply seconds = 1500 seconds
@@ -62,7 +66,7 @@ function App() {
     } else if(val === 0) {
       setBreak = false;
       setOnBreak(false);
-      playBreakAudio();
+      setOnBreakAudio(playBreakAudio());
       
       return sessionTime;
     }
@@ -96,31 +100,51 @@ function App() {
     setPause(!pause);
   };
 
+  //reset the time on default
+  const resetTime = () => {
+    setDisplayTime(25 * 60);
+    setBreakTime(5 * 60);
+    setSessionTime(25 * 60);
+  }
+
   return (
     <div className="App">
-      <h1>Pamodoro Clock</h1>
-      <div>
-        <h2>{onBreak ? (<div><BsAlarm/> Break Time</div>) : (<div><DiCodeigniter/> Session Time</div>)}</h2>
-        <h1>{formatTime(displayTime)}</h1>
-        {/* Control time */}
-        <button type="button" onClick={handleStart}>{pause ? <FiPlay /> : <FiPause/>}</button>
-        {/* Break Time */}
-        <Length 
-          title={'Break length'}
-          adjustTime={adjustTime}
-          type={'break'}
-          time={breakTime}
-          formatTime={formatTime}
-          />
-          {/* Session Time */}
-        <Length 
-          title={'Session length'}
-          adjustTime={adjustTime}
-          type={'session'}
-          time={sessionTime}
-          formatTime={formatTime}
-        />
-      </div> 
+      <IconContext.Provider value={{size:'1.5rem'}}>
+      <div className="container">
+        <h1 className="clock-title">Pamodoro Clock</h1>
+        <div className="clock-container">
+          <div className="clock">
+            {/* Break Time */}
+            <Length 
+              title={'Break length'}
+              adjustTime={adjustTime}
+              type={'break'}
+              time={breakTime}
+              formatTime={formatTime}
+            />
+            <div>
+              <div className="clock-main">
+                <div className="time-title" >{onBreak ? (<h2><BsAlarm /> Break Time</h2>) : (<h2><DiCodeigniter /> Session Time</h2>)}</div>
+                <h1 className="display-time">{formatTime(displayTime)}</h1>
+              </div>
+              <div className="control-btn">
+                {/* Control time */}
+                <button onClick={handleStart}>{pause ? <FiPlay /> : <FiPause />}</button>
+                <button onClick={resetTime}><BiReset/></button>
+              </div>
+            </div>
+            {/* Session Time */}
+            <Length 
+              title={'Session length'}
+              adjustTime={adjustTime}
+              type={'session'}
+              time={sessionTime}
+              formatTime={formatTime}
+            />
+          </div>
+        </div> 
+      </div>
+      </IconContext.Provider>
     </div>
   );
 }
